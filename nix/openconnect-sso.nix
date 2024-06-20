@@ -26,7 +26,7 @@ poetry2nix.mkPoetryApplication {
     poetry2nix.defaultPoetryOverrides
     (
       self: super: {
-        inherit (python3Packages) cryptography pyqt6 pyqt6-sip pyqt6-webengine six more-itertools;
+        inherit (python3Packages) cryptography pyqt6 pyqt6-sip pyqt6-webengine six more-itertools trio;
       }
     )
   ];
