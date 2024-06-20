@@ -30,6 +30,9 @@
 
         devShells.default = shell;
       }) // {
-        overlay = import ./overlay.nix;
+        overlay = final: prev: {
+          poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { pkgs = final; };
+          inherit (prev.callPackage ./nix { pkgs = final; }) openconnect-sso;
+        };
       });
 }
