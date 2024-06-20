@@ -42,9 +42,7 @@ def save(config):
         with config_path.open("w") as config_file:
             toml.dump(config.as_dict(), config_file)
     except Exception:
-        logger.error(
-            "Could not save configuration file", path=config_path, exc_info=True
-        )
+        logger.info("Could not save configuration file", path=config_path)
 
 
 @attr.s
