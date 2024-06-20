@@ -179,7 +179,7 @@ class WebBrowser(QWebEngineView):
 
 function autoFill() {{
     {get_selectors(rules, credentials)}
-    setTimeout(autoFill, 1000);
+    setTimeout(autoFill, 2000);
 }}
 autoFill();
 """
