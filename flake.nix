@@ -23,10 +23,12 @@
           config.packageOverrides = _: { poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }; };
         };
 
-        inherit (import ./nix { inherit pkgs; }) openconnect-sso;
+        inherit (import ./nix { inherit pkgs; }) openconnect-sso shell;
       in {
         packages = { inherit openconnect-sso; };
         defaultPackage = openconnect-sso;
+
+        devShells.default = shell;
       }) // {
         overlay = import ./overlay.nix;
       });
