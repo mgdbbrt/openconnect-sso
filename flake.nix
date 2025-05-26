@@ -5,7 +5,7 @@
       inputs.systems.follows = "systems";
     };
     poetry2nix = {
-      url = "github:nix-community/poetry2nix/2024.5.939250";
+      url = "github:nix-community/poetry2nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
