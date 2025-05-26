@@ -39,7 +39,7 @@ pyotp = "^2.7.0"
 [tool.poetry.dev-dependencies]
 coverage_enable_subprocess = "^1.0"
 pytest = "^7.2"
-black = "=22.10"
+black = "^25.1.0"
 pytest-asyncio = "^0.20.1"
 pytest-cov = "^4.0"
 pytest-httpserver = "^1.0"
