@@ -29,24 +29,32 @@
           pkgs = import nixpkgs {
             inherit system;
 
-            overlays = [ self.overlay ];
+            overlays = [ self.overlays.default ];
           };
 
-          inherit (import ./nix { inherit pkgs; }) openconnect-sso shell;
+          inherit (pkgs) openconnect-sso;
         in
         {
-          packages = { inherit openconnect-sso; };
-          defaultPackage = openconnect-sso;
+          packages = {
+            inherit openconnect-sso;
 
-          devShells.default = shell;
+            default = openconnect-sso;
+          };
+
+          devShells.default = (import ./nix { inherit pkgs; }).shell;
         }
       )
       // {
-        overlay = final: prev: {
-          inherit (prev.callPackage ./nix { pkgs = final; }) openconnect-sso;
+        overlays.default = final: prev: {
+          openconnect-sso = (prev.callPackage ./nix { pkgs = final; }).openconnect-sso.override {
+            python3 = final.python312;
+            python3Packages = final.python312Packages;
+          };
 
           poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { pkgs = final; };
         };
+
+        overlay = self.overlays.default;
       }
     );
 }
