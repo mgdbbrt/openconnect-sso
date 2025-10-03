@@ -1,10 +1,10 @@
-{ lib
-, openconnect
-, python3
-, python3Packages
-, poetry2nix
-, substituteAll
-, wrapQtAppsHook
+{
+  lib,
+  openconnect,
+  python3,
+  python3Packages,
+  poetry2nix,
+  wrapQtAppsHook,
 }:
 
 poetry2nix.mkPoetryApplication {
@@ -24,10 +24,16 @@ poetry2nix.mkPoetryApplication {
 
   overrides = [
     poetry2nix.defaultPoetryOverrides
-    (
-      self: super: {
-        inherit (python3Packages) cryptography pyqt6 pyqt6-sip pyqt6-webengine six more-itertools trio;
-      }
-    )
+    (self: super: {
+      inherit (python3Packages)
+        cryptography
+        pyqt6
+        pyqt6-sip
+        pyqt6-webengine
+        six
+        more-itertools
+        trio
+        ;
+    })
   ];
 }

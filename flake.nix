@@ -15,24 +15,38 @@
     systems.url = "github:nix-systems/default";
   };
 
-  outputs = { self, flake-utils, nixpkgs, ... }@inputs:
-    (flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          config.packageOverrides = _: { poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }; };
-        };
+  outputs =
+    {
+      self,
+      flake-utils,
+      nixpkgs,
+      ...
+    }@inputs:
+    (
+      flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
 
-        inherit (import ./nix { inherit pkgs; }) openconnect-sso shell;
-      in {
-        packages = { inherit openconnect-sso; };
-        defaultPackage = openconnect-sso;
+            overlays = [ self.overlay ];
+          };
 
-        devShells.default = shell;
-      }) // {
+          inherit (import ./nix { inherit pkgs; }) openconnect-sso shell;
+        in
+        {
+          packages = { inherit openconnect-sso; };
+          defaultPackage = openconnect-sso;
+
+          devShells.default = shell;
+        }
+      )
+      // {
         overlay = final: prev: {
-          poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { pkgs = final; };
           inherit (prev.callPackage ./nix { pkgs = final; }) openconnect-sso;
+
+          poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { pkgs = final; };
         };
-      });
+      }
+    );
 }
