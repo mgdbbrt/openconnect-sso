@@ -46,10 +46,7 @@
       )
       // {
         overlays.default = final: prev: {
-          openconnect-sso = (prev.callPackage ./nix { pkgs = final; }).openconnect-sso.override {
-            python3 = final.python312;
-            python3Packages = final.python312Packages;
-          };
+          inherit (prev.callPackage ./nix { pkgs = final; }) openconnect-sso;
 
           poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix { pkgs = final; };
         };
