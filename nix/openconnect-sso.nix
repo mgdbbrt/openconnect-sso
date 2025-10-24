@@ -1,39 +1,64 @@
 {
   lib,
+  buildPythonApplication,
+
+  # build-system
+  poetry-core,
+
+  # dependencies
   openconnect,
-  python3,
-  python3Packages,
-  poetry2nix,
-  wrapQtAppsHook,
+
+  pyqt6,
+  pyqt6-webengine,
+  pysocks,
+
+  attrs,
+  colorama,
+  keyring,
+  lxml,
+  prompt-toolkit,
+  pyotp,
+  pyxdg,
+  requests,
+  structlog,
+  toml,
 }:
 
-poetry2nix.mkPoetryApplication {
-  src = lib.cleanSource ../.;
-  pyproject = ../pyproject.toml;
-  poetrylock = ../poetry.lock;
-  python = python3;
-  buildInputs = [ wrapQtAppsHook ];
+buildPythonApplication {
+  pname = "openconnect-sso";
+  version = "0.8.1";
+  pyproject = true;
+
+  src = ../.;
+
   propagatedBuildInputs = [ openconnect ];
 
-  dontWrapQtApps = true;
-  makeWrapperArgs = [
-    "\${qtWrapperArgs[@]}"
+  build-system = [ poetry-core ];
+
+  dependencies = [
+    pyqt6
+    pyqt6-webengine
+    pysocks
+
+    attrs
+    colorama
+    keyring
+    lxml
+    prompt-toolkit
+    pyotp
+    pyxdg
+    requests
+    structlog
+    toml
   ];
 
-  preferWheels = true;
-
-  overrides = [
-    poetry2nix.defaultPoetryOverrides
-    (self: super: {
-      inherit (python3Packages)
-        cryptography
-        pyqt6
-        pyqt6-sip
-        pyqt6-webengine
-        six
-        more-itertools
-        trio
-        ;
-    })
+  pythonRelaxDeps = [
+    "keyring"
   ];
+
+  meta = {
+    description = "Wrapper script for OpenConnect supporting Azure AD (SAMLv2) authentication to Cisco SSL-VPNs";
+    homepage = "https://github.com/mgdbbrt/openconnect-sso";
+    license = lib.licenses.gpl3Only;
+  };
 }
